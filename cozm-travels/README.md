@@ -27,13 +27,15 @@ https://api.development.cozmtravels.democozm.com/
 
 The API requires a **Bearer token** and a custom **Version header**.
 
-### Example Request Headers
+### Request Headers
 
 ```http
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 Version: FRAGOMEN
 ```
+
+The version is currently hard-coded to `FRAGOMEN`.
 
 ---
 
