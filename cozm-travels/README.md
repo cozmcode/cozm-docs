@@ -153,7 +153,11 @@ If the form includes signature fields, they must be **Base64-encoded**:
 
 ## 5. 🔄 Conditional Fields Logic
 
-Conditional fields appear **only** when a related parent field has a specified value.
+The form uses **conditional fields** to dynamically display form inputs based on user responses. Each conditional field is linked to a parent field and only appears when the parent has a specific value (parent_value).
+
+The form also supports recursive conditional logic to allow the addition of multiple host countries for Multi-state (MSW-A1) applications.
+
+This logic ensures that users only see fields relevant to their situation, making the form cleaner and easier to complete.
 
 ### Structure Example
 
