@@ -75,8 +75,8 @@ The returned `id_token` needs to be used as the Bearer token in further requests
 
 Retrieves dynamic fields for A1 applications based on:
 
-- `country`: Origin country (e.g. `DE`)
-- `host_country`: Destination work country (e.g. `US`)
+- `country`: Origin country (e.g. `US`)
+- `host_country`: Destination work country (e.g. `DE`)
 - `form_type`: Form type (e.g. `COC`)
 
 #### Query Parameters
@@ -90,7 +90,7 @@ Retrieves dynamic fields for A1 applications based on:
 #### Example (cURL)
 
 ```
-curl --location 'https://api.development.cozmtravels.democozm.com/api/compliance/fields?country=DE&host_country=US&form_type=COC' \
+curl --location 'https://api.development.cozmtravels.democozm.com/api/compliance/fields?country=US&host_country=DE&form_type=COC' \
      --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
      --header 'Version: FRAGOMEN'
 ```
@@ -113,7 +113,7 @@ The set of fields in the `fields` array is different for each home country and f
 | `required`           | `true` or `false` – indicates if field is mandatory                                          |
 | `max_length`         | Maximum number characters allowed (only relevant for `string` inputs)                        |
 | `choices`            | Predefined dropdown values (one of which must be used as the value when sending a request)   |
-| `parent_value`       | Triggers conditional logic – value of the parent field to show this field                    |
+| `parent_value`       | Used in conditional logic. The field only needs to be specified in the payload, if the parent field’s value matches this.                    |
 | `conditional_fields` | Nested fields, relevant depending on the current field's value                               |
 | `placeholder`        | Placeholder text shown to user (e.g. "John", only used on the UI)                            |
 | `extra_validations`  | Regex or additional validations, the value for this field needs to pass the validation       |
@@ -138,10 +138,10 @@ Submits a new A1 application with metadata and field data. Use the dynamic field
 
 | Key                         | Type                | Required | Description                                          |
 |-----------------------------|---------------------|----------|------------------------------------------------------|
-| `home_country`              | string              | Yes      | 2-letter ISO code of origin country (e.g. `DE`)      |
+| `home_country`              | string              | Yes      | 2-letter ISO code of origin country (e.g. `US`)      |
 | `nationality`               | string              | Yes      | Applicant's nationality                              |
-| `persona`                   | string (UUID)       | Yes      | UUID of the user (employee/employer/assistant)       |
-| `compliance_type`           | string              | Yes      | One of: `COC`, `MSW-A1`, `A1`                        |
+| `persona`                   | string (UUID)       | Yes      | UUID of the employer entity (this is hard-coded for now, it will be removed in the future.)       |
+| `compliance_type`           | string              | Yes      | Same as `form_type` in the `/api/compliance/fields` endpoint. One of: `COC`, `MSW-A1`, `A1`.                        |
 | `is_complete`               | boolean             | Yes      | Indicates the form is ready for submission           |
 | `is_submitted_by_assistant` | boolean             | No       | Indicates the from was submitted by an assistant     |
 | `uploaded_files`            | array               | No       | Files attached with submission                       |
@@ -266,16 +266,5 @@ To simplify testing, please request the prebuilt Postman collection and access c
 
 - **Email:** `**redacted**`
 - **Password:** `**redacted**`
-
----
-
-## 9. 📜 Changelog
-
-- ✅ Implemented core A1 application functionality
-- 🔐 Added token-based authentication with versioned headers
-- 📄 Enabled dynamic form rendering by country & compliance type
-- 🔁 Supported conditional logic for smart fields
-- 🧾 Documented metadata, field types, and conditional fields
-- ✍️ Supported Base64 digital signatures
 
 ---
