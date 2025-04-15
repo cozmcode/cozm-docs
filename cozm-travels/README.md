@@ -153,7 +153,7 @@ If the form includes signature fields, they must be **Base64-encoded**:
 
 ## 5. 🔄 Conditional Fields Logic
 
-The form uses **conditional fields** to dynamically display form inputs based on user responses. Each conditional field is linked to a parent field and only appears when the parent has a specific value (parent_value).
+The form uses **conditional fields** to dynamically display form inputs based on user responses. Each conditional field is linked to a parent field and only appears when the parent has a specific value (`parent_value`).
 
 The form also supports recursive conditional logic to allow the addition of multiple host countries for Multi-state (MSW-A1) applications.
 
@@ -204,7 +204,7 @@ This logic helps:
 | `phone`                     | Phone number                                             | `12025550123`             |
 | `signature`            | Base64-encoded signature image                           | `data:image/png;base64,...` |
 
-> ℹ️ Other data types may be used. Contact the Cozm API team if needed.
+> ℹ️ Other data types may be used. Contact the Cozm team if needed.
 
 ---
 
@@ -232,7 +232,7 @@ This logic helps:
 
 ## 8. 🧪 Postman Collection
 
-To simplify testing, use our prebuilt Postman collection.
+To simplify testing, please request the prebuilt Postman collection and access credentials from the Cozm team.
 
 ### Authentication Credentials
 
