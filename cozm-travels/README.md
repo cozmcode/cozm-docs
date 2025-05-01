@@ -84,8 +84,8 @@ Retrieves dynamic fields for A1 applications based on:
 
 | Key            | Type     | Required | Description                                          |
 |----------------|----------|----------|------------------------------------------------------|
-| `country`      | `string` | Yes      | 2-letter ISO code of the country (e.g. `US`)    |
-| `form_type`    | `string` | Yes      | Form/Compliance type (e.g. `COC`, `MSW-A1`, `A1`)         |
+| `country`      | `string` | Yes      | 2-letter ISO code of the country (e.g. `US`)         |
+| `form_type`    | `string` | Yes      | Form/Compliance type (e.g. `COC`, `MSW-A1`, `A1`)    |
 
 #### Example (cURL)
 
@@ -407,14 +407,21 @@ To simplify testing, please request the prebuilt Postman collection and access c
 1. **Set Token**
    - Go to Body > `form-data`
    - Enter email and password
-   - Click *Send* to get the token
+   - Click *Send* to set the token automatically in the environment variables.
 
-2. **US COC Form**
-   - Retrieve form fields for the U.S.
+2. **A1/MSW/COC Applications**
+   - US COC Form
+   - Submit US COC Application
 
-3. **Submit US COC Application**
-   - Submits the form
-   - Sends confirmation email to `**redacted**`
+3. **VISA Applications**
+   - UK ETA Form
+   - Submit UK ETA Application
+   - UK BV Form
+   - Submit UK BV Application
+
+4. **File Management**
+   - Generate File Upload URLs
+   - Upload File to S3
 
 ### Email Inbox Credentials
 
