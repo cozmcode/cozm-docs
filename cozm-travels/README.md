@@ -299,14 +299,105 @@ The `uploaded_files` array contains objects with the name and `aws_object_key` o
 ```json
 "uploaded_files": [
     {
-        "name": "CamScanner 12-20-2024 18.42.jpg",
-        "aws_object_key": "5adabe96-4bd8-415a-8b47-878db6019abc"
+        "name": "blank.pdf",
+        "aws_object_key": "64599c9c-72cd-466c-be79-7ae59171e2bf"
     },
     {
-        "name": "CamScanner 12-20-2024 18.42.jpg",
-        "aws_object_key": "83f908fa-6992-414e-9c39-dcef8fbf14f9"
+        "name": "blank.pdf",
+        "aws_object_key": "64599c9c-72cd-466c-be79-7ae59171e2bf"
     }
 ]
+```
+
+### f. 📋 List Submitted Applications
+
+`GET /api/compliance/compliance-requests/`
+
+Retrieves a paginated list of all submitted applications.
+
+#### Request Headers
+
+| Header          | Value                      | Required | Description                |
+|-----------------|----------------------------|----------|----------------------------|
+| `Version`       | `FRAGOMEN`                 | Yes      | API version identifier     |
+| `Authorization` | `Bearer YOUR_ACCESS_TOKEN` | Yes      | Authentication token       |
+
+#### Example Request (cURL)
+
+```bash
+curl --location 'https://api.development.cozmtravels.democozm.com/api/compliance/compliance-requests/' \
+     --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+     --header 'Version: FRAGOMEN'
+```
+
+#### Response Format
+
+The response includes pagination information and an array of application objects:
+
+| Field         | Type    | Description                                    |
+|--------------|---------|------------------------------------------------|
+| `page_number` | integer | Current page number                            |
+| `page_size`   | integer | Number of items per page                       |
+| `page_count`  | integer | Total number of pages                          |
+| `count`       | integer | Total number of items                          |
+| `next`        | string  | URL for next page (null if last page)         |
+| `previous`    | string  | URL for previous page (null if first page)    |
+| `results`     | array   | List of application objects                    |
+
+Each application object in the `results` array contains:
+
+| Field                         | Type    | Description                                    |
+|-------------------------------|---------|------------------------------------------------|
+| `uuid`                        | string  | Unique identifier for the application          |
+| `home_country`                | string  | Country code of origin                         |
+| `host_countries`              | array   | List of destination country codes              |
+| `compliance_type`             | string  | Type of application (e.g., `COC`, `BV`)        |
+| `status`                      | string  | Current status (e.g., `DRAFTED`, `FILED`)      |
+| `first_name`                  | string  | Employee's first name                          |
+| `last_name`                   | string  | Employee's last name                           |
+| `email`                       | string  | Employee's email address                       |
+| `compliance_type_description` | string  | Human-readable compliance type                 |
+| `persona_name`                | string  | Name of the employer entity                    |
+| `start_date`                  | string  | Assignment start date (YYYY-MM-DD)             |
+| `expiry_date`                 | string  | Assignment end date (YYYY-MM-DD)               |
+| `issue_date`                  | string  | Date when application was submitted            |
+| `days_to_expiry`              | integer | Days remaining until expiry                    |
+| `created_at`                  | string  | Application creation timestamp                 |
+| `reference_details`           | object  | Additional reference information               |
+| `comment`                     | string  | Optional comments on the application           |
+| `case_manager`                | string  | Assigned case manager                          |
+| `reference_id`                | string  | External reference ID                          |
+| `application_link`            | string  | Not implemented yet                            |
+
+#### Example Response
+
+```json
+{
+    "page_number": 1,
+    "page_size": 20,
+    "page_count": 1,
+    "count": 12,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "uuid": "b312b8ee-0336-438c-b5e7-d7b2dbcf7fa5",
+            "home_country": "AT",
+            "host_countries": ["UK"],
+            "compliance_type": "BV",
+            "status": "DRAFTED",
+            "first_name": "Sandbox",
+            "last_name": "Cozm",
+            "email": "sandbox@thecozm.com",
+            "compliance_type_description": "Business Visa",
+            "persona_name": "Fragomen -  UK",
+            "start_date": "2025-05-01",
+            "expiry_date": "2025-05-23",
+            "created_at": "2025-05-01T13:42:54.468333Z",
+            "days_to_expiry": 22
+        }
+    ]
+}
 ```
 
 ---
@@ -423,9 +514,14 @@ To simplify testing, please request the prebuilt Postman collection and access c
    - Generate File Upload URLs
    - Upload File to S3
 
+5. **Application Management**
+   - Submitted Applications List
+
 ### Email Inbox Credentials
 
 - **Email:** `**redacted**`
 - **Password:** `**redacted**`
+
+Please contact the Cozm team to obtain the above credentials.
 
 ---
