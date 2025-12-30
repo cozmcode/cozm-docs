@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Campaign Playbook - The Cozm</title>
+    <style>
+        /* The Cozm Brand Colours */
+        :root {
+            --cozm-teal: #44919c;
+            --cozm-teal-light: #c7e5e9;
+            --cozm-red: #bd4040;
+            --cozm-red-light: #f1cfcf;
+            --cozm-purple: #ac40bd;
+            --cozm-gold: #bd8941;
+            --cozm-gold-light: #f7e6ce;
+            --cozm-black: #121212;
+            --cozm-white: #FFFFFF;
+            --cozm-grey: #f3f3f3;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--cozm-black);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--cozm-white);
+        }
+        h1 {
+            color: var(--cozm-teal);
+            border-bottom: 3px solid var(--cozm-teal);
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: var(--cozm-black);
+            margin-top: 40px;
+            border-bottom: 2px solid var(--cozm-teal-light);
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: var(--cozm-teal);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid var(--cozm-teal-light);
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--cozm-teal);
+            color: var(--cozm-white);
+        }
+        tr:nth-child(even) {
+            background-color: var(--cozm-grey);
+        }
+        code {
+            background-color: var(--cozm-grey);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: var(--cozm-black);
+        }
+        pre {
+            background-color: var(--cozm-grey);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border-left: 4px solid var(--cozm-teal);
+        }
+        .warning {
+            background-color: var(--cozm-gold-light);
+            border-left: 4px solid var(--cozm-gold);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: var(--cozm-teal-light);
+            border-left: 4px solid var(--cozm-teal);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info {
+            background-color: var(--cozm-teal-light);
+            border-left: 4px solid var(--cozm-teal);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .danger {
+            background-color: var(--cozm-red-light);
+            border-left: 4px solid var(--cozm-red);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--cozm-teal);
+        }
+        .workflow-box {
+            background-color: var(--cozm-grey);
+            border: 2px solid var(--cozm-teal);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        a {
+            color: var(--cozm-teal);
+        }
+        a:hover {
+            color: var(--cozm-purple);
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--cozm-teal-light);
+            margin: 30px 0;
+        }
+        strong {
+            color: var(--cozm-black);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Email Campaign Playbook</h1>
+<p><strong>The Cozm - Outreach Campaign Production Guide</strong></p>
+<p>
+    <strong>Version:</strong> 1.0<br>
+    <strong>Created:</strong> December 2025<br>
+    <strong>Target:</strong> January 2026 Team Objective
+</p>
+
+<hr>
+
+<h2>Overview</h2>
+<p>This playbook documents the end-to-end workflow for producing professional email outreach campaigns at The Cozm. It covers every step from finding target companies to sending personalised emails at scale.</p>
+<p>The <strong>Christmas 2025 campaign</strong> serves as the reference example, with 269 recipients across major organisations including adidas, Fragomen, Siemens, KION, Dematic, and Santa Fe.</p>
+
+<div class="workflow-box">
+    <strong>8-Step Workflow</strong><br><br>
+    1. Research (Gemini) → 2. Build List (Google Sheets) → 3. Validate (Emailable) → 4. Find Image (Pixabay)<br>
+    ↓<br>
+    5. Host Image (Cloudinary) → 6. Design Email (HTML) → 7. Test Send → 8. Full Send (SendGrid)
+</div>
+
+<hr>
+
+<h2>Step 1: Research Target Companies</h2>
+
+<h3>Using Gemini Deep Research</h3>
+<p>The Gemini Deep Research tool conducts comprehensive research to identify target companies and contacts in specific markets.</p>
+
+<p><strong>Example Queries:</strong></p>
+<pre>"List the top 50 companies in Germany with global mobility programmes.
+Include company name, headquarters location, industry, and typical
+job titles for mobility managers."</pre>
+
+<pre>"Identify major multinational corporations with offices in [Country]
+that would require A1/Certificate of Coverage compliance.
+Include HR and Global Mobility contact patterns."</pre>
+
+<h3>Best Practices</h3>
+<ul>
+    <li>Be specific about the industry or sector</li>
+    <li>Request contact title patterns (e.g., "Global Mobility Manager", "HR Director")</li>
+    <li>Ask for company size and employee count where relevant</li>
+    <li>Save research results to reference later</li>
+</ul>
+
+<hr>
+
+<h2>Step 2: Build the Contact List (Google Sheets)</h2>
+
+<h3>Recommended Columns</h3>
+<table>
+    <tr>
+        <th>Column</th>
+        <th>Purpose</th>
+    </tr>
+    <tr><td>A: Name</td><td>Full name of contact</td></tr>
+    <tr><td>B: Email</td><td>Email address</td></tr>
+    <tr><td>C: Company</td><td>Organisation name</td></tr>
+    <tr><td>D: Title</td><td>Job title</td></tr>
+    <tr><td>E: Source</td><td>Where you found the contact</td></tr>
+    <tr><td>F: Verified</td><td>Email verification status</td></tr>
+    <tr><td>G: Include</td><td>Yes/No - whether to include in campaign</td></tr>
+    <tr><td>H: Sent</td><td>Date email was sent</td></tr>
+    <tr><td>I: Notes</td><td>Any additional notes</td></tr>
+</table>
+
+<hr>
+
+<h2>Step 3: Validate Email Addresses (Emailable)</h2>
+
+<div class="warning">
+    <strong>⚠️ CRITICAL:</strong> NEVER send to unverified email addresses. Invalid emails damage sender reputation and can result in being blacklisted.
+</div>
+
+<h3>Verification Commands</h3>
+<p><strong>Single Email:</strong></p>
+<pre>mcp__emailable__verify_email({ email: "address@domain.com" })</pre>
+
+<p><strong>Batch Verification:</strong></p>
+<pre>mcp__emailable__verify_emails_batch({
+  emails: ["email1@domain.com", "email2@domain.com", ...]
+})</pre>
+
+<h3>Response Interpretation</h3>
+<table>
+    <tr>
+        <th>State</th>
+        <th>Meaning</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td><code>deliverable</code></td>
+        <td>Email is valid and accepts mail</td>
+        <td>✅ Safe to send</td>
+    </tr>
+    <tr>
+        <td><code>undeliverable</code></td>
+        <td>Mailbox does not exist</td>
+        <td>❌ DO NOT SEND - Remove from list</td>
+    </tr>
+    <tr>
+        <td><code>risky</code></td>
+        <td>May bounce (catch-all, full mailbox)</td>
+        <td>⚠️ Send with caution</td>
+    </tr>
+    <tr>
+        <td><code>unknown</code></td>
+        <td>Could not be verified</td>
+        <td>⚠️ Send with caution</td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>Step 4: Find a Free Image (Pixabay)</h2>
+
+<p><strong>Website:</strong> <a href="https://pixabay.com/">https://pixabay.com/</a></p>
+
+<p>Pixabay provides royalty-free images that can be used commercially without attribution.</p>
+
+<h3>Search Tips</h3>
+<ol>
+    <li>Go to pixabay.com</li>
+    <li>Search for relevant terms (e.g., "Christmas robot", "holiday technology")</li>
+    <li>Filter by:
+        <ul>
+            <li><strong>Type:</strong> Photos or Illustrations</li>
+            <li><strong>Orientation:</strong> Horizontal (best for email headers)</li>
+            <li><strong>Size:</strong> Large (for high quality)</li>
+        </ul>
+    </li>
+    <li>Download the image in the largest available resolution</li>
+</ol>
+
+<hr>
+
+<h2>Step 5: Host the Image (Cloudinary)</h2>
+
+<h3>Why Cloudinary?</h3>
+<p>Email clients do not display local images. You must host images on a public CDN. Cloudinary provides free hosting with fast global delivery.</p>
+
+<h3>The Cozm Cloudinary Account</h3>
+<table>
+    <tr>
+        <th>Setting</th>
+        <th>Value</th>
+    </tr>
+    <tr><td>Cloud Name</td><td><code>dtrayn0x8</code></td></tr>
+    <tr><td>API Key</td><td><code>793584875455354</code></td></tr>
+    <tr><td>Base URL</td><td><code>https://res.cloudinary.com/dtrayn0x8/image/upload/</code></td></tr>
+</table>
+
+<h3>How to Upload</h3>
+<ol>
+    <li>Log in at <a href="https://cloudinary.com/">cloudinary.com</a></li>
+    <li>Go to <strong>Media Library</strong></li>
+    <li>Click <strong>Upload</strong> and select your image</li>
+    <li>Once uploaded, copy the URL</li>
+</ol>
+
+<div class="info">
+    <strong>Christmas 2025 Image URL:</strong><br>
+    <code>https://res.cloudinary.com/dtrayn0x8/image/upload/v1766697742/ai-generated-8424645_1920_rcbdgb.jpg</code>
+</div>
+
+<hr>
+
+<h2>Step 6: Design the HTML Email</h2>
+
+<h3>Template Structure</h3>
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Email Subject&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Arial, sans-serif; line-height: 1.7;
+             color: #121212; background-color: #f5f8fa;
+             margin: 0; padding: 20px 0;"&gt;
+
+    &lt;!-- Container --&gt;
+    &lt;div style="max-width: 600px; margin: 0 auto;
+                background-color: #ffffff; border-radius: 12px;
+                overflow: hidden;"&gt;
+
+        &lt;!-- Header Image --&gt;
+        &lt;img src="YOUR_CLOUDINARY_URL" alt="Description"
+             style="width: 100%; height: auto; display: block;"&gt;
+
+        &lt;!-- Content --&gt;
+        &lt;div style="padding: 45px 40px; text-align: center;"&gt;
+            &lt;h1 style="color: #1d3642;"&gt;Headline Here&lt;/h1&gt;
+            &lt;p&gt;Your message content here.&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Footer --&gt;
+        &lt;div style="background-color: #44919c; color: #ffffff;
+                    padding: 25px; text-align: center;"&gt;
+            &lt;p&gt;&amp;copy; 2025 The Cozm&lt;/p&gt;
+            &lt;a href="mailto:support@thecozm.com?subject=Unsubscribe"&gt;
+                Unsubscribe
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<h3>Design Best Practices</h3>
+<ul>
+    <li><strong>Use inline CSS</strong> - Email clients strip &lt;style&gt; tags</li>
+    <li><strong>Max width 600px</strong> - Optimal for most email clients</li>
+    <li><strong>Use web-safe fonts</strong> - Fallback to system fonts</li>
+    <li><strong>Include alt text</strong> - For images that don't load</li>
+    <li><strong>Include unsubscribe link</strong> - Legal requirement</li>
+</ul>
+
+<hr>
+
+<h2>Step 7: Send Emails with Claude Code</h2>
+
+<div class="info">
+    <strong>No Python required!</strong> Claude Code can send emails directly using the SendGrid API. Simply describe what you want to send and Claude will handle the rest.
+</div>
+
+<h3>SendGrid Configuration</h3>
+<table>
+    <tr>
+        <th>Setting</th>
+        <th>Value</th>
+    </tr>
+    <tr><td>Authenticated Domain</td><td><code>thecozm.com</code></td></tr>
+    <tr><td>Default From</td><td><code>benjamin@thecozm.com</code></td></tr>
+</table>
+
+<h3>How to Send with Claude Code</h3>
+<p>Simply ask Claude Code to send your campaign. Example prompts:</p>
+
+<pre>"Send a test email to benjamin@thecozm.com using the HTML template
+I just created. Use SendGrid API."</pre>
+
+<pre>"Send the Christmas campaign email to all verified contacts
+in my Google Sheet. Use 1 second delay between sends."</pre>
+
+<pre>"Send the attached HTML email to these 50 recipients:
+[paste list from Google Sheets]"</pre>
+
+<h3>What Claude Code Does</h3>
+<ol>
+    <li>Reads your HTML email template</li>
+    <li>Connects to SendGrid API using the configured API key</li>
+    <li>Sends emails one-by-one with rate limiting</li>
+    <li>Reports success/failure for each recipient</li>
+    <li>Can update your Google Sheet with sent dates</li>
+</ol>
+
+<h3>Rate Limiting</h3>
+<p>Claude Code automatically adds a 1-second delay between emails to respect SendGrid limits and maintain good sender reputation.</p>
+
+<hr>
+
+<h2>Step 8: Test and Send</h2>
+
+<h3>Testing Workflow</h3>
+<ol>
+    <li><strong>Send test first:</strong> Ask Claude Code to send a test email to yourself</li>
+    <li><strong>Check your inbox</strong> - Verify the email renders correctly</li>
+    <li><strong>Check on mobile</strong> - Forward to your phone and verify</li>
+    <li><strong>Check spam folders</strong> - Ensure it's not being caught by filters</li>
+</ol>
+
+<h3>Full Send</h3>
+<p>Once testing is complete, ask Claude Code to send to your full recipient list:</p>
+<pre>"Send the email to all 'deliverable' contacts in my Google Sheet.
+Skip anyone marked as 'undeliverable'. Report progress as you go."</pre>
+<p>Claude Code will report success/failure for each recipient in real-time.</p>
+
+<hr>
+
+<h2>January 2026 Target</h2>
+
+<div class="success">
+    <strong>Objective:</strong> Each team member should produce and send one targeted outreach campaign during January 2026, following this playbook.
+</div>
+
+<h3>Suggested Campaign Types</h3>
+<table>
+    <tr>
+        <th>Campaign</th>
+        <th>Target Audience</th>
+    </tr>
+    <tr><td>New Year Message</td><td>Existing contacts (like Christmas 2025)</td></tr>
+    <tr><td>Country-Specific</td><td>New prospects in a target country</td></tr>
+    <tr><td>Industry-Specific</td><td>Companies in a specific sector</td></tr>
+    <tr><td>Event Follow-up</td><td>Contacts from conferences/meetings</td></tr>
+</table>
+
+<h3>Success Criteria Checklist</h3>
+<ul class="checklist">
+    <li>Used Gemini Deep Research to identify targets</li>
+    <li>Built list in Google Sheets with all required columns</li>
+    <li>Verified 100% of email addresses with Emailable</li>
+    <li>Found appropriate royalty-free image on Pixabay</li>
+    <li>Uploaded image to Cloudinary</li>
+    <li>Created properly formatted HTML email</li>
+    <li>Tested email before sending</li>
+    <li>Successfully sent to 50+ recipients</li>
+    <li>Updated spreadsheet with sent dates</li>
+    <li>Zero undeliverable bounces</li>
+</ul>
+
+<hr>
+
+<h2>Quick Reference: Tools</h2>
+<table>
+    <tr>
+        <th>Tool</th>
+        <th>Purpose</th>
+    </tr>
+    <tr><td>Gemini Deep Research</td><td>Find target companies</td></tr>
+    <tr><td>Perplexity Search</td><td>Quick lookups</td></tr>
+    <tr><td>Google Sheets</td><td>Create and manage contact list</td></tr>
+    <tr><td>Emailable</td><td>Verify email addresses</td></tr>
+    <tr><td>Pixabay</td><td>Find royalty-free images</td></tr>
+    <tr><td>Cloudinary</td><td>Host images for emails</td></tr>
+    <tr><td>SendGrid</td><td>Send emails at scale</td></tr>
+</table>
+
+<hr>
+
+<h2>Troubleshooting</h2>
+
+<h3>Email Not Arriving</h3>
+<ol>
+    <li>Check spam/junk folder</li>
+    <li>Verify SendGrid API key is correct in CLAUDE.md</li>
+    <li>Check SendGrid dashboard for delivery status</li>
+    <li>Ensure <code>thecozm.com</code> domain authentication is active</li>
+</ol>
+
+<h3>Image Not Displaying</h3>
+<ol>
+    <li>Verify Cloudinary URL is accessible in browser</li>
+    <li>Ensure <code>https://</code> (not <code>http://</code>)</li>
+    <li>Check image alt text is meaningful</li>
+</ol>
+
+<h3>Claude Code Issues</h3>
+<ol>
+    <li>Ensure SendGrid API key is configured in your global CLAUDE.md</li>
+    <li>If rate limited, wait a few minutes before retrying</li>
+    <li>For large campaigns (500+), consider splitting across multiple sessions</li>
+</ol>
+
+<hr>
+<p><em>Last updated: December 2025</em></p>
+
+</body>
+</html>
