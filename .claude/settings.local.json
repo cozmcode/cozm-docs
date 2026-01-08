@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd comprehensive Frontend Development Standards documentation\n\nCreated frontend/README.md with complete development standards covering:\n- React 18 + TypeScript patterns with real code examples\n- Zustand state management with modular slice architecture\n- API client setup with Axios interceptors and token refresh\n- Protected routes with OAuth callback handling\n- Material-UI and Tailwind CSS styling guidelines\n- Complete Cozm brand color palette with usage guidelines\n- Feature flags and multi-tenancy configuration system\n- Form handling with Formik and React Hook Form\n- Internationalization with i18next \\(18+ languages\\)\n- RBAC authorization system \\(Employer Dashboard\\)\n- Project structure and naming conventions\n- Performance optimization and best practices\n\nAll examples based on production code from Cozm Employer Dashboard\nand Travel Visa applications. Includes 13 major sections with working\ncode samples, configuration examples, and common pitfalls to avoid.\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}
