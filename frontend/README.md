@@ -13,14 +13,15 @@ This document outlines the development standards, patterns, and best practices f
 3. [State Management with Zustand](#state-management-with-zustand)
 4. [API Client & Data Fetching](#api-client--data-fetching)
 5. [Routing & Protected Routes](#routing--protected-routes)
-6. [Component Library (Material-UI)](#component-library-material-ui)
-7. [Tailwind CSS Styling Guidelines](#tailwind-css-styling-guidelines)
-8. [Form Handling & Validation](#form-handling--validation)
-9. [Internationalization (i18n)](#internationalization-i18n)
-10. [Feature Flags & Multi-Tenancy](#feature-flags--multi-tenancy)
-11. [Authorization & RBAC](#authorization--rbac)
-12. [Project Structure](#project-structure)
-13. [Common Pitfalls & Best Practices](#common-pitfalls--best-practices)
+6. [Shadcn UI Components](#shadcn-ui-components)
+7. [Component Library (Material-UI)](#component-library-material-ui)
+8. [Tailwind CSS Styling Guidelines](#tailwind-css-styling-guidelines)
+9. [Form Handling & Validation](#form-handling--validation)
+10. [Internationalization (i18n)](#internationalization-i18n)
+11. [Feature Flags & Multi-Tenancy](#feature-flags--multi-tenancy)
+12. [Authorization & RBAC](#authorization--rbac)
+13. [Project Structure](#project-structure)
+14. [Common Pitfalls & Best Practices](#common-pitfalls--best-practices)
 
 ---
 
@@ -655,9 +656,612 @@ export default PublicRoute;
 
 ---
 
+## Shadcn UI Components
+
+**Unity-Frontend** uses **shadcn/ui**, a collection of reusable components built with Radix UI and Tailwind CSS. Unlike traditional component libraries, shadcn/ui copies component code directly into your project, giving you full control to customize.
+
+### Installation & Setup
+
+**1. Initial Configuration**
+
+Shadcn is configured via `components.json`:
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "iconLibrary": "lucide"
+}
+```
+
+**Key Settings:**
+- **Style**: `new-york` (modern, clean design)
+- **Base Color**: `neutral` (gray-based palette)
+- **CSS Variables**: `true` (enables theming via CSS variables)
+- **Icon Library**: `lucide` (Lucide React icons)
+
+**2. The `cn()` Utility Function**
+
+The `cn()` utility merges Tailwind classes intelligently:
+
+```typescript
+// lib/utils.ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+**Why use `cn()`:**
+- **Conditional classes**: `cn("base-class", condition && "conditional-class")`
+- **Merge conflicts**: Automatically resolves conflicting Tailwind classes
+- **Type safety**: Full TypeScript support
+
+**Usage:**
+```typescript
+import { cn } from "@/lib/utils";
+
+<div className={cn(
+  "p-4 rounded-lg",  // Base classes
+  isActive && "bg-primary",  // Conditional
+  className  // Allow override from props
+)} />
+```
+
+### CSS Variables Theme System
+
+Shadcn components use CSS variables for theming, defined in `index.css`:
+
+```css
+@layer base {
+  :root {
+    /* Background & Foreground */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    /* Primary (shadcn semantic color) */
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Secondary */
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    /* Muted */
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    /* Accent */
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    /* Destructive (errors) */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders & Inputs */
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+
+    /* Border Radius */
+    --radius: 0.5rem;
+
+    /* Chart Colors */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    /* ... dark mode colors */
+  }
+}
+```
+
+**Important:** Values are in HSL format without `hsl()` wrapper. This allows Tailwind to add opacity modifiers.
+
+### Tailwind Config Integration
+
+Shadcn CSS variables are integrated into Tailwind config:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  darkMode: ["class"],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        // Shadcn semantic colors
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+
+        // Custom Cozm colors (for multi-tenancy)
+        primaryColor: "rgb(var(--primaryColor) / <alpha-value>)",
+        secondaryColor: "rgb(var(--secondaryColor) / <alpha-value>)",
+
+        // Risk levels
+        risk: {
+          low: "#10B981",
+          medium: "#F08014",
+          high: "#EF4444",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+};
+```
+
+### Available Shadcn Components
+
+Components are located in `src/components/ui/`:
+
+**Form & Input:**
+- `button.tsx` - Button with variants (default, destructive, outline, secondary, ghost, link)
+- `input.tsx` - Text input field
+- `textarea.tsx` - Multi-line text input
+- `checkbox.tsx` - Checkbox input
+- `radio-group.tsx` - Radio button group
+- `select.tsx` - Dropdown select
+- `switch.tsx` - Toggle switch
+- `label.tsx` - Form label
+- `form.tsx` - Form wrapper with React Hook Form integration
+
+**Layout & Containers:**
+- `card.tsx` - Card container with header, content, footer
+- `separator.tsx` - Horizontal/vertical divider
+- `scroll-area.tsx` - Custom scrollable area
+- `sheet.tsx` - Slide-out panel
+- `tabs.tsx` - Tab navigation
+
+**Overlays:**
+- `dialog.tsx` - Modal dialog
+- `alert-dialog.tsx` - Confirmation dialog
+- `popover.tsx` - Floating popover
+- `tooltip.tsx` - Hover tooltip
+- `hover-card.tsx` - Rich hover card
+
+**Feedback:**
+- `alert.tsx` - Alert message box
+- `badge.tsx` - Status badge
+- `toast.tsx` - Toast notification
+- `progress.tsx` - Progress bar
+
+**Navigation:**
+- `dropdown-menu.tsx` - Dropdown menu
+- `command.tsx` - Command palette (Cmd+K style)
+
+**Data Display:**
+- `table.tsx` - Data table
+- `avatar.tsx` - User avatar
+- `calendar.tsx` - Date picker calendar
+
+**Interactive:**
+- `accordion.tsx` - Collapsible sections
+- `collapsible.tsx` - Expand/collapse content
+
+### Component Usage Examples
+
+**1. Button Component**
+
+```typescript
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+
+<Button variant="default" size="default">
+  Save Changes
+</Button>
+
+<Button variant="destructive" size="sm">
+  Delete
+</Button>
+
+<Button variant="outline">
+  Cancel
+</Button>
+
+<Button variant="ghost" size="icon">
+  <Plus className="h-4 w-4" />
+</Button>
+
+<Button variant="link">
+  Learn More
+</Button>
+```
+
+**Button Variants:**
+- `default` - Solid primary color
+- `destructive` - Red for dangerous actions
+- `outline` - Bordered with transparent background
+- `secondary` - Muted secondary color
+- `ghost` - Transparent with hover state
+- `link` - Styled as link with underline
+
+**Button Sizes:**
+- `default` - `h-9 px-4 py-2`
+- `sm` - `h-8 px-3 text-xs`
+- `lg` - `h-10 px-8`
+- `icon` - `h-9 w-9` (square for icons)
+
+**2. Card Component**
+
+```typescript
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+<Card>
+  <CardHeader>
+    <CardTitle>Application Details</CardTitle>
+    <CardDescription>
+      Review the information below before submitting
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Card content goes here</p>
+  </CardContent>
+  <CardFooter>
+    <Button>Submit</Button>
+  </CardFooter>
+</Card>
+```
+
+**3. Dialog Component**
+
+```typescript
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+<Dialog open={isOpen} onOpenChange={setIsOpen}>
+  <DialogTrigger asChild>
+    <Button variant="outline">Edit Profile</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Edit Profile</DialogTitle>
+      <DialogDescription>
+        Make changes to your profile here. Click save when you're done.
+      </DialogDescription>
+    </DialogHeader>
+    <div className="grid gap-4 py-4">
+      {/* Form fields */}
+    </div>
+    <DialogFooter>
+      <Button type="submit">Save changes</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+**4. Form with Shadcn + React Hook Form**
+
+```typescript
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const form = useForm({
+  defaultValues: {
+    email: "",
+    password: "",
+  },
+});
+
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <FormField
+      control={form.control}
+      name="email"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <Input placeholder="you@example.com" {...field} />
+          </FormControl>
+          <FormDescription>
+            We'll never share your email.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <Button type="submit">Submit</Button>
+  </form>
+</Form>
+```
+
+### Customizing Shadcn Components
+
+**Approach 1: Extend via className prop**
+
+```typescript
+<Button className="w-full bg-cozmTeal hover:bg-cozmTeal/90">
+  Custom Styled Button
+</Button>
+
+<Card className="border-cozmGold shadow-lg">
+  Premium Card
+</Card>
+```
+
+**Approach 2: Modify component file directly**
+
+Since shadcn components are copied into your project, you can edit them:
+
+```typescript
+// components/ui/card.tsx - Customize default styles
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "rounded-xl border bg-card text-card-foreground shadow",
+        "hover:shadow-lg transition-shadow",  // Added custom hover effect
+        className
+      )}
+      {...props}
+    />
+  )
+);
+```
+
+**Approach 3: Create variant with CVA**
+
+```typescript
+// components/ui/button.tsx - Add new variant
+import { cva } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center...",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground...",
+        // Add custom variant
+        cozm: "bg-cozmTeal text-white hover:bg-cozmTeal/90",
+        premium: "bg-gradient-to-r from-cozmGold to-cozmPurple text-white",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+      },
+    },
+  }
+);
+
+// Usage
+<Button variant="cozm">Cozm Button</Button>
+<Button variant="premium">Premium Feature</Button>
+```
+
+**Approach 4: Wrapper component for consistent customization**
+
+```typescript
+// components/cozm-button.tsx
+import { Button, ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+interface CozmButtonProps extends ButtonProps {
+  premium?: boolean;
+}
+
+export const CozmButton = ({ premium, className, ...props }: CozmButtonProps) => {
+  return (
+    <Button
+      className={cn(
+        premium && "bg-cozmGold hover:bg-cozmGold/90",
+        className
+      )}
+      {...props}
+    />
+  );
+};
+```
+
+### Installing New Components
+
+Add components using the shadcn CLI:
+
+```bash
+# Install specific component
+npx shadcn@latest add button
+
+# Install multiple components
+npx shadcn@latest add button input card dialog
+
+# Update existing component
+npx shadcn@latest add button --overwrite
+```
+
+This copies component code to `src/components/ui/`.
+
+### Theming & Dark Mode
+
+Enable dark mode by adding the `dark` class to the root element:
+
+```typescript
+// App.tsx or layout component
+import { useEffect, useState } from "react";
+
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  return (
+    <div>
+      <button onClick={() => setDarkMode(!darkMode)}>
+        Toggle Dark Mode
+      </button>
+      {/* Your app */}
+    </div>
+  );
+};
+```
+
+All shadcn components automatically adapt to dark mode using CSS variables.
+
+### Best Practices
+
+**1. Always use the `cn()` utility for className merging**
+```typescript
+// Good
+<Button className={cn("custom-class", isActive && "active-class")} />
+
+// Bad - classes may conflict
+<Button className={`custom-class ${isActive ? "active-class" : ""}`} />
+```
+
+**2. Prefer composition over modification**
+```typescript
+// Good - compose with existing components
+<Card>
+  <CardHeader>
+    <div className="flex items-center justify-between">
+      <CardTitle>Title</CardTitle>
+      <Badge>New</Badge>
+    </div>
+  </CardHeader>
+</Card>
+
+// Avoid - modifying component internals
+```
+
+**3. Use semantic color tokens**
+```typescript
+// Good - uses theme tokens
+<div className="bg-card border-border text-foreground" />
+
+// Bad - hardcoded colors
+<div className="bg-white border-gray-200 text-black" />
+```
+
+**4. Leverage CVA for variant management**
+```typescript
+// Use class-variance-authority for complex variants
+const cardVariants = cva("rounded-lg border p-6", {
+  variants: {
+    variant: {
+      default: "bg-card",
+      primary: "bg-primary text-primary-foreground",
+      destructive: "bg-destructive text-destructive-foreground",
+    },
+  },
+});
+```
+
+**5. Keep components accessible**
+```typescript
+// Shadcn components are built on Radix UI (accessible by default)
+// Maintain accessibility when customizing
+<Dialog>
+  <DialogTrigger asChild>
+    <Button aria-label="Open settings">Settings</Button>
+  </DialogTrigger>
+</Dialog>
+```
+
+---
+
 ## Component Library (Material-UI)
 
-We use **Material-UI (MUI) v6** for pre-built components, particularly for date pickers and data grids.
+**Travel Visa** and **Employer Dashboard** use **Material-UI (MUI) v6** for pre-built components, particularly for date pickers and data grids.
 
 ### Material-UI Components Used
 
