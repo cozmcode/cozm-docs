@@ -28,7 +28,9 @@ This document outlines the development standards, patterns, and best practices f
 ## Tech Stack Overview
 
 ### Core Frontend Stack
-- **React 18.3+** - Modern functional components with hooks
+- **React** - Modern functional components with hooks
+  - **React 18.3+** (Travel Visa, Employer Dashboard)
+  - **React 19** (Unity-Frontend with modern features)
 - **TypeScript 5.6+** - Type-safe development
 - **Vite 7.0+** - Fast build tool and dev server
 - **React Router 6/7** - Client-side routing
@@ -83,20 +85,23 @@ const Button: React.FC<ButtonProps> = ({
   children,
   requiredPermission,
   permissionBehavior = "hide",
+  disabled,
   ...restProps
 }) => {
   // Permission check (Employer Dashboard)
   const hasPermission = usePermission(requiredPermission || "view");
 
-  if (requiredPermission && !hasPermission) {
-    if (permissionBehavior === "hide") return null;
-    if (permissionBehavior === "disable") {
-      restProps.disabled = true;
-    }
+  if (requiredPermission && !hasPermission && permissionBehavior === "hide") {
+    return null;
   }
+
+  // Compute disabled state without mutating props
+  const isDisabled = disabled ||
+    (requiredPermission && !hasPermission && permissionBehavior === "disable");
 
   return (
     <button
+      disabled={isDisabled}
       className={mode === "fill" ? "fill-btn" : "outline-btn"}
       {...restProps}
     >
@@ -143,6 +148,7 @@ interface TextInputProps {
   required?: boolean;
   error?: string;
   fieldType?: FieldType;
+  fieldName?: string;
   disabled?: boolean;
   autoPopulatedValues?: Record<string, FieldValue>;
   shouldShowError?: boolean;
@@ -183,6 +189,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
     </div>
   );
 });
+TextInput.displayName = "TextInput";
 
 export default TextInput;
 ```
@@ -450,6 +457,11 @@ httpClient.interceptors.response.use(
 export default httpClient;
 ```
 
+> **Security Note:** Storing authentication tokens in `localStorage` exposes them to XSS (Cross-Site Scripting) attacks. While this is the current pattern in our codebase, be aware that any malicious script that gains execution in the browser can access these tokens. For applications handling highly sensitive data, consider alternative approaches such as:
+> - httpOnly cookies (prevents JavaScript access)
+> - In-memory token storage with refresh token rotation
+> - Service worker-based token management
+
 ### React Query (TanStack Query) Usage
 
 Use React Query for server state management with caching:
@@ -625,7 +637,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
         redirectToLogin();
       }
     },
-    [setUser, navigate, location.pathname]
+    [setUser, navigate, location.pathname, setSearchParams]
   );
 
   return <>{children}</>;
@@ -2125,7 +2137,7 @@ const router = createBrowserRouter([
 
 **3. Debounce Search Inputs**
 ```typescript
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import debounce from "lodash/debounce";
 
 const SearchComponent = () => {
@@ -2135,6 +2147,13 @@ const SearchComponent = () => {
     }, 300),
     []
   );
+
+  // Cleanup on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
 
   return <input onChange={(e) => debouncedSearch(e.target.value)} />;
 };
@@ -2321,6 +2340,95 @@ if (isLoading) return <Loader />;
 if (error) return <ErrorMessage error={error} />;
 return <div>{data}</div>;
 ```
+
+**5a. Use Error Boundaries for Rendering Errors**
+
+Error Boundaries catch JavaScript errors in component trees and display fallback UI:
+
+```typescript
+// components/error-boundary.tsx
+import { Component, ErrorInfo, ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Log to error reporting service
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="p-8 text-center">
+          <h2 className="text-2xl font-bold text-cozmRed mb-4">
+            Something went wrong
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {this.state.error?.message || "An unexpected error occurred"}
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false })}
+            className="bg-primary text-white px-4 py-2 rounded"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+```
+
+**Usage:**
+```typescript
+// Wrap components that might throw errors
+import ErrorBoundary from "@/components/error-boundary";
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={
+            <ErrorBoundary fallback={<DashboardError />}>
+              <Dashboard />
+            </ErrorBoundary>
+          } />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
+  );
+}
+```
+
+> **Note:** Error Boundaries only catch errors during rendering, in lifecycle methods, and in constructors. They do NOT catch errors in:
+> - Event handlers (use try-catch)
+> - Asynchronous code (use try-catch or .catch())
+> - Server-side rendering
+> - Errors thrown in the Error Boundary itself
 
 **6. Don't Over-Fetch Data**
 ```typescript
